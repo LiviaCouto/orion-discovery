@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orion — Discovery v1.0 · Listra Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#FF6A00;--orange-light:#FFB366;--orange-pale:#FFEEDD;--orange-dark:#CC4400;
+  --navy:#0F172A;--navy-card:#1E293B;--navy-hover:#243047;--navy-warm:#1E2D42;
+  --white:#FFFFFF;--off-white:#F8F9FB;--off-white-dark:#EEF1F5;
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --border-light:#E2E8F0;--border-dark:rgba(255,255,255,.08);
+  --blue:#3B82F6;--blue-bg:#EFF6FF;--green:#16A34A;--green-bg:#DCFCE7;
+  --purple:#8B5CF6;--purple-bg:#EDE9FE;--yellow:#D97706;--yellow-bg:#FEF3C7;
+  --teal:#0D9488;--teal-bg:#CCFBF1;--red:#DC2626;--red-bg:#FEE2E2;
+  --font-display:'Sora',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;
+  --r-sm:6px;--r-btn:8px;--r-card:12px;--r-card-lg:16px;--r-pill:9999px;--sidebar:260px;
+  --shadow-sm:0 1px 4px rgba(15,23,42,.06);--shadow-md:0 4px 16px rgba(15,23,42,.08);
+}
+[data-theme="dark"]{
+  --white:#16213A;--off-white:#0F172A;--off-white-dark:#16213A;
+  --text-primary:#EAF0FB;--text-secondary:#A9B7CE;--text-muted:#5E6F8C;
+  --border-light:rgba(234,240,251,.09);--orange-pale:#2E2013;
+  --green-bg:#0d2417;--red-bg:#2a1210;--yellow-bg:#2a2010;--blue-bg:#0e2236;--purple-bg:#1f1733;--teal-bg:#0c2422;
+}
+html{scroll-behavior:smooth;font-size:15px}
+body{font-family:var(--font-body);background:var(--off-white);color:var(--text-primary);line-height:1.7;-webkit-font-smoothing:antialiased}
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar);height:100vh;background:var(--navy);overflow-y:auto;z-index:100;padding:24px 0 40px;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.06) transparent}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.nav-logo{padding:0 20px 20px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.nav-logo svg{flex-shrink:0}
+.nav-logo-text{font-family:var(--font-display);font-size:21px;font-weight:700;color:#fff;line-height:1}
+.nav-logo-meta{font-size:10.5px;color:rgba(255,255,255,.28);margin-top:8px;line-height:1.6;padding:0 20px}
+.nav-section{font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.22);padding:16px 20px 6px}
+.nav-link{display:flex;align-items:center;gap:8px;padding:7px 20px;font-size:12.5px;color:rgba(255,255,255,.46);text-decoration:none;transition:all .15s;border-left:2px solid transparent}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.04)}
+.nav-link.active{color:var(--orange);border-left-color:var(--orange);background:rgba(255,106,0,.08)}
+.nav-link .num{font-size:10px;font-family:monospace;color:rgba(255,255,255,.2);min-width:18px}
+.nav-link.active .num{color:var(--orange)}
+.nav-footer{margin-top:auto;padding:16px 20px 0;border-top:1px solid rgba(255,255,255,.07);font-size:10px;color:rgba(255,255,255,.22);line-height:1.7}
+.main{margin-left:var(--sidebar);min-height:100vh}
+.page{max-width:980px;margin:0 auto;padding:48px 44px 100px}
+.dark-toggle{position:fixed;top:18px;right:22px;z-index:200;background:var(--navy-card);border:1px solid rgba(255,255,255,.12);color:#fff;padding:7px 14px;border-radius:var(--r-pill);font-size:11.5px;font-family:var(--font-body);cursor:pointer;transition:all .15s}
+.dark-toggle:hover{background:var(--navy-hover)}
+.section{margin-bottom:80px;scroll-margin-top:28px}
+.section-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border-light);padding-bottom:10px;margin-bottom:26px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'';width:3px;height:14px;background:var(--orange);border-radius:2px;flex-shrink:0}
+.section-num{font-size:9px;font-family:monospace;color:var(--orange);margin-right:2px}
+.section-lead{font-size:14.5px;color:var(--text-secondary);line-height:1.8;margin-bottom:28px;max-width:760px}
+.hero{background:var(--navy);border-radius:var(--r-card-lg);padding:48px;margin-bottom:40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(255,106,0,.14) 0%,transparent 68%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-50px;left:60px;width:260px;height:260px;background:radial-gradient(circle,rgba(255,106,0,.06) 0%,transparent 70%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.hero-left{flex:1;min-width:280px}
+.hero-eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);font-weight:600;margin-bottom:16px}
+.hero-title{font-family:var(--font-display);font-size:clamp(26px,3vw,42px);color:#fff;line-height:1.1;margin-bottom:18px;font-weight:700}
+.hero-title span{color:var(--orange)}
+.hero-lead{font-size:14.5px;color:rgba(255,255,255,.58);line-height:1.8;max-width:560px}
+.hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
+.hero-chip{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:var(--r-pill);padding:7px 14px 7px 8px}
+.hero-av{width:34px;height:34px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.hero-av.b{background:rgba(255,255,255,.12);color:rgba(255,255,255,.65)}
+.hero-chip-name{font-size:12.5px;font-weight:600;color:#fff;line-height:1.2}
+.hero-chip-role{font-size:10.5px;color:rgba(255,255,255,.4)}
+.hero-badge{background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:var(--r-pill)}
+.hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.07);position:relative;z-index:1}
+.hero-meta-item strong{display:block;color:#fff;font-size:12.5px;margin-bottom:2px}
+.hero-meta-item{font-size:11px;color:rgba(255,255,255,.35)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
+.stat-card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:20px 18px;transition:box-shadow .2s,transform .18s}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.stat-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:7px}
+.stat-value{font-size:23px;font-weight:700;color:var(--orange-dark);line-height:1.1;font-family:var(--font-display)}
+[data-theme="dark"] .stat-value{color:var(--orange)}
+.stat-sub{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.5}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:20px}
+.card-dark{background:var(--navy-card);border:1px solid var(--border-dark);border-radius:var(--r-card);padding:20px}
+.card-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:11px}
+.card-title{font-size:16px;font-weight:600;color:var(--text-primary);line-height:1.35;margin-bottom:7px;font-family:var(--font-display)}
+.card-body{font-size:13.5px;color:var(--text-secondary);line-height:1.75}
+.card-icon{font-size:22px;margin-bottom:11px;line-height:1}
+.card-foot{font-size:11.5px;color:var(--text-muted);margin-top:9px;font-style:italic;line-height:1.5}
+.insight{background:var(--white);border:1px solid var(--border-light);border-left:4px solid var(--orange);border-radius:0 var(--r-card) var(--r-card) 0;padding:20px 24px;margin:22px 0}
+.insight.risk{border-left-color:var(--red)}
+.insight.info{border-left-color:var(--blue)}
+.insight-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--orange-dark);margin-bottom:9px}
+[data-theme="dark"] .insight-lbl{color:var(--orange)}
+.insight.risk .insight-lbl{color:var(--red)}
+.insight.info .insight-lbl{color:var(--blue)}
+.insight p{font-size:14.5px;font-style:italic;color:var(--text-secondary);line-height:1.85}
+.nota{border-radius:0 var(--r-card) var(--r-card) 0;padding:13px 17px;margin-bottom:14px}
+.nota-orange{background:var(--orange-pale);border-left:3px solid var(--orange)}
+.nota-info{background:var(--blue-bg);border-left:3px solid var(--blue)}
+.nota-caution{background:var(--yellow-bg);border-left:3px solid var(--yellow)}
+.nota-risk{background:var(--red-bg);border-left:3px solid var(--red)}
+.nota-safe{background:var(--green-bg);border-left:3px solid var(--green)}
+.nota-title{font-size:11.5px;font-weight:700;margin-bottom:4px}
+.nota-orange .nota-title{color:var(--orange-dark)}.nota-info .nota-title{color:var(--blue)}.nota-caution .nota-title{color:var(--yellow)}.nota-risk .nota-title{color:var(--red)}.nota-safe .nota-title{color:var(--green)}
+.nota p{font-size:12.5px;line-height:1.7}
+.nota-orange p{color:var(--orange-dark)}.nota-info p{color:var(--blue)}.nota-caution p{color:var(--yellow)}.nota-risk p{color:var(--red)}.nota-safe p{color:var(--green)}
+[data-theme="dark"] .nota-orange p,[data-theme="dark"] .nota-orange .nota-title{color:#FFB366}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500;padding:6px 12px;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-btn);color:var(--text-secondary)}
+.chip.orange{background:var(--orange-pale);color:var(--orange-dark);border-color:var(--orange-light)}
+.chip.safe{background:var(--green-bg);color:var(--green);border-color:#86EFAC}
+.chip.info{background:var(--blue-bg);color:var(--blue);border-color:#BFDBFE}
+.chip.purple{background:var(--purple-bg);color:var(--purple);border-color:#C4B5FD}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:var(--r-pill)}
+.b-safe{background:var(--green-bg);color:var(--green);border:1px solid #86EFAC}
+.b-caution{background:var(--yellow-bg);color:var(--yellow);border:1px solid #FDE68A}
+.b-risk{background:var(--red-bg);color:var(--red);border:1px solid #FCA5A5}
+.b-info{background:var(--blue-bg);color:var(--blue);border:1px solid #BFDBFE}
+.b-orange{background:var(--orange-pale);color:var(--orange-dark);border:1px solid var(--orange-light)}
+.b-dark{background:var(--navy);color:var(--orange);border:1px solid rgba(255,106,0,.3)}
+.comp{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);overflow:hidden;margin-bottom:11px}
+.comp-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;gap:14px;transition:background .15s}
+.comp-head:hover{background:var(--off-white)}
+.comp-name{font-size:15.5px;font-weight:600;color:var(--text-primary)}
+.comp-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.45}
+.comp-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--r-sm);white-space:nowrap;flex-shrink:0}
+.cb-high{background:var(--red-bg);color:var(--red)}.cb-med{background:var(--yellow-bg);color:var(--yellow)}.cb-low{background:var(--green-bg);color:var(--green)}.cb-data{background:var(--blue-bg);color:var(--blue)}
+.chevron{font-size:18px;color:var(--text-muted);transition:transform .22s;flex-shrink:0}
+.comp.open .chevron{transform:rotate(180deg)}
+.comp-body{display:none;border-top:1px solid var(--border-light)}
+.comp.open .comp-body{display:block}
+.comp-cols{display:grid;grid-template-columns:1fr 1fr}
+.comp-col{padding:16px 20px}
+.comp-col:first-child{border-right:1px solid var(--border-light)}
+.comp-col-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);font-weight:700;margin-bottom:11px;display:block}
+.comp-item{font-size:12.5px;font-weight:500;color:var(--text-secondary);display:flex;align-items:flex-start;gap:7px;margin-bottom:8px;line-height:1.55}
+.i-yes{color:var(--green)}.i-opp{color:var(--orange-dark)}.i-no{color:var(--red)}
+[data-theme="dark"] .i-opp{color:var(--orange)}
+.comp-learn{padding:14px 20px;border-top:1px solid var(--border-light);background:rgba(255,106,0,.04)}
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.swot-cell{border-radius:var(--r-card);padding:20px}
+.swot-cell.s{background:var(--green-bg);border:1px solid #86EFAC}
+.swot-cell.w{background:var(--red-bg);border:1px solid #FCA5A5}
+.swot-cell.o{background:var(--blue-bg);border:1px solid #BFDBFE}
+.swot-cell.t{background:var(--yellow-bg);border:1px solid #FDE68A}
+.swot-head{font-size:13.5px;font-weight:700;margin-bottom:13px;font-family:var(--font-display)}
+.swot-cell.s .swot-head{color:#15803D}.swot-cell.w .swot-head{color:#B91C1C}.swot-cell.o .swot-head{color:#1D4ED8}.swot-cell.t .swot-head{color:#B45309}
+.swot-item{font-size:12.5px;line-height:1.65;margin-bottom:8px;display:flex;gap:7px;align-items:flex-start}
+.swot-cell.s .swot-item{color:#14532D}.swot-cell.w .swot-item{color:#7F1D1D}.swot-cell.o .swot-item{color:#1E3A8A}.swot-cell.t .swot-item{color:#78350F}
+.swot-bullet{flex-shrink:0;font-weight:700;opacity:.6}
+.status-banner{display:flex;align-items:center;gap:14px;background:var(--navy);border-radius:var(--r-card-lg);padding:20px 26px;margin-top:20px}
+.status-dot{width:9px;height:9px;border-radius:50%;background:var(--orange);flex-shrink:0;box-shadow:0 0 0 4px rgba(255,106,0,.2)}
+.status-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;flex:1}
+.status-badge{background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:var(--r-pill);white-space:nowrap;flex-shrink:0}
+.code-block{background:var(--navy);color:#CBD5E1;border-radius:var(--r-card);padding:18px 22px;font-family:monospace;font-size:12px;line-height:1.85;margin:18px 0;overflow-x:auto}
+.code-block .g{color:#5EEAD4}.code-block .w{color:#FFB366;font-weight:700}
+.opp-row{display:flex;gap:16px;align-items:flex-start;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:18px 20px;margin-bottom:11px}
+.opp-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.opp-title{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px}
+.opp-body{font-size:12.5px;color:var(--text-secondary);line-height:1.7}
+.opp-tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:var(--r-pill);margin-top:8px}
+.sprint-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.sprint-card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);overflow:hidden}
+.sprint-head{padding:16px 20px;color:#fff}
+.sprint-head.sp-1{background:var(--orange)}
+.sprint-head.sp-2{background:var(--navy)}
+.sprint-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.8;margin-bottom:4px}
+.sprint-title{font-size:16px;font-weight:700;font-family:var(--font-display)}
+.sprint-body{padding:16px 20px}
+.sprint-item{font-size:13px;color:var(--text-secondary);padding:7px 0;border-bottom:1px solid var(--border-light);display:flex;gap:8px}
+.sprint-item:last-child{border-bottom:none}
+.sp-blt{font-weight:700;flex-shrink:0}
+.rm-track{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.rm-col{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:18px}
+.rm-col-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding-bottom:10px;margin-bottom:12px;border-bottom:2px solid}
+.rm-col.v1 .rm-col-head{color:var(--orange-dark);border-color:var(--orange)}
+[data-theme="dark"] .rm-col.v1 .rm-col-head{color:var(--orange)}
+.rm-col.v2 .rm-col-head{color:var(--blue);border-color:var(--blue)}
+.rm-col.v3 .rm-col-head{color:var(--purple);border-color:var(--purple)}
+.rm-item{font-size:12.5px;color:var(--text-secondary);padding:6px 0;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.rm-dot{flex-shrink:0;font-size:13px}
+.risk-list{display:flex;flex-direction:column;gap:11px}
+.risk-row{display:flex;gap:14px;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:16px 20px;align-items:flex-start}
+.risk-sev{font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--r-sm);white-space:nowrap;flex-shrink:0;margin-top:2px}
+.rs-h{background:var(--red-bg);color:var(--red)}.rs-m{background:var(--yellow-bg);color:var(--yellow)}.rs-l{background:var(--green-bg);color:var(--green)}
+.risk-title{font-size:13.5px;font-weight:600;color:var(--text-primary);margin-bottom:5px}
+.risk-desc{font-size:12.5px;color:var(--text-secondary);line-height:1.7}
+.risk-desc strong{color:var(--text-primary)}
+.score-ring{width:74px;height:74px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:5px solid}
+.score-ring.s{border-color:var(--green)}.score-ring.c{border-color:var(--yellow)}.score-ring.r{border-color:var(--red)}
+.score-num{font-size:18px;font-weight:700;color:var(--text-primary);font-family:var(--font-display)}
+.score-lbl{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+.ai-tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);background:var(--purple-bg);color:var(--purple);margin-top:8px}
+table.cmp{width:100%;border-collapse:collapse;font-size:12.5px;margin:14px 0}
+table.cmp th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:11.5px}
+table.cmp td{padding:10px 14px;border-bottom:1px solid var(--border-light);color:var(--text-secondary);vertical-align:top}
+table.cmp tr:nth-child(even){background:var(--off-white)}
+table.cmp td.dim{font-weight:600;color:var(--text-primary);white-space:nowrap}
+table.cmp td.sol{background:rgba(139,92,246,.04)}
+table.cmp td.ori{background:rgba(255,106,0,.04)}
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.price-card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:18px;text-align:center}
+.price-card.feat{border:2px solid var(--orange);position:relative}
+.price-plan{font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.price-val{font-size:21px;font-weight:700;font-family:var(--font-display);color:var(--text-primary);margin-bottom:4px}
+.price-sub{font-size:11px;color:var(--text-muted);margin-bottom:12px}
+.price-feat{font-size:11.5px;color:var(--text-secondary);text-align:left;line-height:1.7}
+.timeline{position:relative;padding-left:28px;margin:18px 0}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--border-light)}
+.tl-item{position:relative;margin-bottom:18px;padding-bottom:4px}
+.tl-item::before{content:'';position:absolute;left:-28px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--orange);border:3px solid var(--white)}
+.tl-date{font-size:10.5px;font-weight:700;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+[data-theme="dark"] .tl-date{color:var(--orange)}
+.tl-title{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:4px}
+.tl-body{font-size:12.5px;color:var(--text-secondary);line-height:1.65}
+.persona-card{display:flex;gap:12px;align-items:flex-start}
+.persona-av{width:44px;height:44px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.name-tag{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
+.name-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:13px}
+.name-fullname{font-size:15px;font-weight:600}
+.name-role{font-size:11.5px;font-weight:600;margin-top:1px}
+@media(max-width:1000px){.g2,.g3,.g4,.g5,.swot,.sprint-grid,.rm-track,.price-grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}}
+@media print{.sidebar,.dark-toggle{display:none}.main{margin-left:0}}
+</style>
+</head>
+<body>
+
+<button class="dark-toggle" onclick="document.documentElement.toggleAttribute('data-theme');this.textContent=document.documentElement.hasAttribute('data-theme')?'☀️ Claro':'🌙 Escuro'">🌙 Escuro</button>
+
+<nav class="sidebar">
+  <div class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="38" stroke="#FF6A00" stroke-width="6" fill="none" stroke-dasharray="178 60"/>
+      <circle cx="18" cy="58" r="6" fill="#FF6A00"/>
+      <circle cx="42" cy="84" r="5" fill="#FF6A00"/>
+      <path d="M55 22 L60 36 L74 41 L60 46 L55 60 L50 46 L36 41 L50 36 Z" fill="#FF6A00"/>
+      <path d="M70 50 L73 57 L80 60 L73 63 L70 70 L67 63 L60 60 L67 57 Z" fill="#FF6A00"/>
+    </svg>
+    <span class="nav-logo-text">ORION</span>
+  </div>
+  <div class="nav-logo-meta">Discovery v1.0 · Listra Digital<br>Gestão de Performance &amp; RH</div>
+
+  <div class="nav-section">Contexto</div>
+  <a href="#origem" class="nav-link active"><span class="num">01</span>Como tudo começou</a>
+  <a href="#problema" class="nav-link"><span class="num">02</span>O problema — Sólides</a>
+  <a href="#mercado" class="nav-link"><span class="num">03</span>Mercado e oportunidade</a>
+  <a href="#personas" class="nav-link"><span class="num">04</span>Público e personas</a>
+
+  <div class="nav-section">Competitivo</div>
+  <a href="#concorrentes" class="nav-link"><span class="num">05</span>Sólides em detalhe</a>
+  <a href="#swot" class="nav-link"><span class="num">06</span>Matriz SWOT</a>
+  <a href="#comparativo" class="nav-link"><span class="num">07</span>Comparativo direto</a>
+
+  <div class="nav-section">Produto</div>
+  <a href="#proposta" class="nav-link"><span class="num">08</span>Proposta de valor</a>
+  <a href="#bigfive" class="nav-link"><span class="num">09</span>Metodologia Big Five</a>
+  <a href="#instrumento" class="nav-link"><span class="num">10</span>O instrumento — 25 questões</a>
+  <a href="#competencias" class="nav-link"><span class="num">11</span>Framework de competências</a>
+  <a href="#ia" class="nav-link"><span class="num">12</span>IA aplicada e Flooxs</a>
+
+  <div class="nav-section">Execução</div>
+  <a href="#mvp" class="nav-link"><span class="num">13</span>MVP — o que construir</a>
+  <a href="#regras" class="nav-link"><span class="num">14</span>8 regras inegociáveis</a>
+  <a href="#stack" class="nav-link"><span class="num">15</span>Stack e arquitetura</a>
+  <a href="#roadmap" class="nav-link"><span class="num">16</span>Roadmap V1 / V2 / V3</a>
+
+  <div class="nav-section">Estratégia</div>
+  <a href="#precificacao" class="nav-link"><span class="num">17</span>Precificação</a>
+  <a href="#riscos" class="nav-link"><span class="num">18</span>Riscos e mitigações</a>
+  <a href="#marca" class="nav-link"><span class="num">19</span>Identidade e nome</a>
+  <a href="#time" class="nav-link"><span class="num">20</span>Time e papéis</a>
+  <a href="#esteira" class="nav-link"><span class="num">21</span>Esteira de execução</a>
+  <a href="#proximos" class="nav-link"><span class="num">22</span>Próximos passos</a>
+
+  <div class="nav-footer">Documento vivo — atualizado<br>conforme o discovery avança.<br>Uso interno · Listra Digital</div>
+</nav>
+
+<main class="main">
+<div class="page">
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Discovery de Produto · Junho 2026</div>
+      <div class="hero-title">Da planilha para o produto.<br>Do workaround para o <span>sistema</span>.</div>
+      <p class="hero-lead">O Orion nasce para substituir a Sólides internamente na Listra Digital — uma plataforma de gestão de performance e recrutamento por aderência comportamental, construída com metodologia científica mais robusta, preço justo e foco total no que realmente gera valor.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-chip"><div class="hero-av">LC</div><div><div class="hero-chip-name">Lívia Couto</div><div class="hero-chip-role">PO · condução do discovery</div></div></div>
+      <div class="hero-chip"><div class="hero-av b">VS</div><div><div class="hero-chip-name">Victoria Silva</div><div class="hero-chip-role">Gente &amp; Gestão · domínio</div></div></div>
+      <span class="hero-badge">Escopo fechado — em build</span>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Origem</strong>Conversa informal com Mari, liderança Listra</div>
+    <div class="hero-meta-item"><strong>Janela</strong>Antes da Sólides corrigir as próprias fraquezas</div>
+    <div class="hero-meta-item"><strong>Status</strong>Kickoff técnico realizado · build em andamento</div>
+    <div class="hero-meta-item"><strong>Meta</strong>Go-live do piloto interno — Julho 2026</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-card"><div class="stat-label">Custo Sólides por relatório</div><div class="stat-value">R$ 159,80</div><div class="stat-sub">2 créditos Profiler · modelo pay-per-use</div></div>
+  <div class="stat-card"><div class="stat-label">Clientes Sólides no Brasil</div><div class="stat-value">40 mil+</div><div class="stat-sub">9M+ relatórios Profiler emitidos</div></div>
+  <div class="stat-card"><div class="stat-label">Mercado HR Tech BR</div><div class="stat-value">+9% a.a.</div><div class="stat-sub">96% das empresas abertas em 2025 são PMEs</div></div>
+  <div class="stat-card"><div class="stat-label">Onboarding atual na Listra</div><div class="stat-value">30+ dias</div><div class="stat-sub">Múltiplas reuniões de treinamento na Sólides</div></div>
+</div>
+<!-- 01 ORIGEM -->
+<div class="section" id="origem">
+  <div class="section-label"><span class="section-num">01</span>Como tudo começou</div>
+  <p class="section-lead">Antes de qualquer linha de código, o Orion nasceu de uma frustração concreta sendo vivida todos os dias por quem usa a ferramenta atual. Um bom discovery começa ouvindo quem sofre o problema — não inventando uma solução no vácuo.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-lbl">O ponto de partida</div>
+      <p style="font-family:var(--font-display);font-size:19px;color:var(--text-primary);line-height:1.35;margin-bottom:11px;font-weight:600">Uma conversa informal que virou discovery estruturado</p>
+      <p class="card-body">Em junho de 2026, Mari — liderança da Listra Digital — trouxe para a área de TI uma inquietação que já era sentida internamente há algum tempo: a plataforma de gestão de pessoas que a empresa usa, a Sólides, não estava entregando o valor esperado. Custo alto, bugs frequentes, relatórios ruins, e boa parte dos processos de RH continuava sendo feita fora da ferramenta — no Excel, no WhatsApp, no Google Drive.</p>
+    </div>
+    <div class="card">
+      <div class="card-lbl">A virada — Victoria não chegou de mãos vazias</div>
+      <p class="card-body" style="margin-bottom:10px">Lívia Couto, da área de Produto e TI, acolheu essa dor e convocou uma reunião de discovery com Victoria Silva (Gente e Gestão) e Marcelle Borges (Financeiro). Victoria já havia dedicado tempo pensando no problema:</p>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">Apresentação estruturada com visão de produto</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">Documento de arquitetura e backlog em 10 etapas</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">25 questões do Big Five já elaboradas e calibradas</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">Planilha completa de competências com pesos por cargo</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-lbl">O que isso mudou no discovery</div>
+    <p>Não foi só um levantamento de dores — foi uma sessão de co-criação com material de base já estruturado. Isso transformou semanas de discovery clássico em dias de validação e refinamento, acelerando diretamente a passagem da ideia para o backlog executável.</p>
+  </div>
+
+  <div class="nota nota-orange">
+    <div class="nota-title">A decisão de construir</div>
+    <p>Não foi tomada por impulso. Veio de um acúmulo de frustração com uma plataforma que, apesar de ser a mais conhecida do mercado de RH no Brasil, entrega pouco valor real para empresas do porte e modelo da Listra — e da percepção de que existe uma oportunidade de mercado genuína: há uma lacuna entre o que pequenas e médias empresas precisam e o que as ferramentas atuais oferecem. A meta original era um MVP funcionando em até duas sprints, ainda em junho de 2026 — revisada para julho após o kickoff técnico com o time de desenvolvimento.</p>
+  </div>
+</div>
+
+<!-- 02 PROBLEMA -->
+<div class="section" id="problema">
+  <div class="section-label"><span class="section-num">02</span>O problema — por que a Sólides não funciona</div>
+  <p class="section-lead">A Listra usa a Sólides há mais de um ano e meio. A adoção foi feita com alta expectativa — é a plataforma mais conhecida do mercado de RH no Brasil. Na prática, a experiência real revelou um padrão consistente de promessas não cumpridas.</p>
+
+  <div class="g3">
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="card-icon">🐛</div>
+      <div class="card-title">Bugs e perda de dados</div>
+      <p class="card-body">Durante o preenchimento de avaliações de desempenho, o sistema apresentava erros que apagavam tudo o que havia sido digitado, sem recuperação automática. A integração com LinkedIn — um dos principais pontos de venda — falhava com frequência, impedindo o cadastro de candidatos no momento exato da abordagem.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="card-icon">📄</div>
+      <div class="card-title">Relatórios inutilizáveis</div>
+      <p class="card-body">Visual desatualizado, fontes pequenas, zero customização. Após encerrar um ciclo de avaliação, a plataforma não permite gerar o PDF — só um Excel desconfigurado. Victoria refazia tudo manualmente no Gamma App para apresentar à liderança.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--yellow)">
+      <div class="card-icon">🧬</div>
+      <div class="card-title">DISC insuficiente</div>
+      <p class="card-body">O Profiler tem só duas telas de perguntas — pouca credibilidade ao respondente. É mais suscetível a distorções: uma resposta pode mudar significativamente o perfil gerado, comprometendo a confiabilidade para tomada de decisão.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--yellow)">
+      <div class="card-icon">🗂️</div>
+      <div class="card-title">Engenharia de Cargos vazia</div>
+      <p class="card-body">Vendida como diferencial premium. Na prática funciona só como repositório — não cruza o perfil do cargo com candidatos ou colaboradores. Victoria mantém um Excel paralelo porque a plataforma não gera nenhuma análise útil.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--yellow)">
+      <div class="card-icon">📦</div>
+      <div class="card-title">Nine Box inacessível</div>
+      <p class="card-body">Tecnicamente correto, visualmente confuso. A leitura é difícil, o resultado não orienta nenhuma ação e não há explicação sobre o que fazer com a informação gerada. Ninguém na Listra usa com confiança.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--orange)">
+      <div class="card-icon">💳</div>
+      <div class="card-title">Créditos que desincentivam uso</div>
+      <p class="card-body">Cada relatório Profiler desbloqueado consome créditos. A empresa precisa "economizar" o uso de uma funcionalidade que já pagou — reservando testes só para finalistas. O sistema gera o comportamento oposto ao ideal.</p>
+    </div>
+  </div>
+
+  <div class="opp-row" style="background:var(--navy);border:none">
+    <div class="opp-icon" style="background:rgba(255,106,0,.15)">🗺️</div>
+    <div style="flex:1">
+      <div class="opp-title" style="color:#fff">Os workarounds — o mapa do que está fora da plataforma hoje</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px">
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Parecer de candidatos: feito manualmente em Word</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Shortlist: pasta no Google Drive com tudo solto</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Feedback de reprovados: WhatsApp digitado à mão</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Engenharia de cargos: duplicada em Excel</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Candidatos LinkedIn (hunting): planilha separada</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Apresentações para a Mari: refeitas no Gamma App</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Histórico de reajuste salarial: planilha separada</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--orange)">→</span>Pesquisa de clima: relatório todo refeito na mão</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nota nota-risk">
+    <div class="nota-title">O modelo de negócio agrava tudo</div>
+    <p>A Sólides vende por módulos separados — cada módulo contratado aumenta a fatura. É também profundamente orientada ao modelo CLT: toda a linguagem da plataforma pressupõe vínculo empregatício. Para a Listra, que trabalha predominantemente com colaboradores PJ, isso não é só uma lacuna funcional — é um risco jurídico real ao usar terminologia inadequada para o tipo de relação contratual existente.</p>
+  </div>
+</div>
+
+<!-- 03 MERCADO -->
+<div class="section" id="mercado">
+  <div class="section-label"><span class="section-num">03</span>Mercado e oportunidade</div>
+  <p class="section-lead">A Sólides domina o mercado de HR Tech no Brasil por inércia, marca e volume — não por ser o melhor produto disponível para PMEs em 2026. Isso abre uma janela real, mas que tem prazo.</p>
+
+  <div class="g3">
+    <div class="card"><div class="card-icon">🏢</div><div class="card-title">96% de empresas PMEs</div><p class="card-body">Das empresas abertas no Brasil em 2025, a esmagadora maioria é pequena ou média. É o segmento que a Sólides declara atender mas para o qual o produto é desproporcionalmente caro e complexo.</p></div>
+    <div class="card"><div class="card-icon">📈</div><div class="card-title">HR Tech +9% ao ano</div><p class="card-body">O mercado brasileiro de tecnologia para RH cresce de forma consistente. Não é um nicho estagnado — é uma categoria em expansão, com espaço para novos entrantes mais focados.</p></div>
+    <div class="card"><div class="card-icon">💼</div><div class="card-title">Mercado PJ crescente</div><p class="card-body">Agências, consultorias, startups e empresas de tecnologia operam cada vez mais com PJ. A Sólides, como a maioria das ferramentas de RH, ignora esse modelo na linguagem e na estrutura.</p></div>
+  </div>
+
+  <div class="insight info">
+    <div class="insight-lbl">Por que agora — a janela está aberta mas tem prazo</div>
+    <p>Em maio de 2026, a Sólides anunciou publicamente que investimento em IA para PMEs é sua próxima aposta estratégica. A liderança da empresa declarou que a IA será o grande propulsor de crescimento. Isso significa que o gap que o Orion explora — relatórios ruins, falta de cruzamento de dados, ausência de inteligência aplicada — está no radar do concorrente. Quanto mais tempo o Orion levar para sair da Listra, mais próximo o concorrente estará de corrigir as próprias fraquezas.</p>
+  </div>
+
+  <div class="nota nota-caution">
+    <div class="nota-title">Outros players no radar</div>
+    <p>Além da Sólides, existem competidores como Elofy, Culture Rocks, Gupy e Qulture.Rocks, além de startups emergentes. Nenhum deles, porém, combina metodologia Big Five + foco no mercado PJ + preço acessível para PMEs de 30 a 300 colaboradores — o posicionamento específico que o Orion ocupa.</p>
+  </div>
+</div>
+
+<!-- 04 PERSONAS -->
+<div class="section" id="personas">
+  <div class="section-label"><span class="section-num">04</span>Público-alvo e personas</div>
+  <p class="section-lead">O Orion foi desenhado para pequenas e médias empresas de prestação de serviços, com 30 a 300 colaboradores — grandes o suficiente para sentir a dor da gestão de pessoas informal, pequenas o suficiente para a Sólides não se justificar.</p>
+
+  <div class="g3" style="margin-bottom:18px">
+    <div class="card persona-card">
+      <div class="persona-av">🧑‍💼</div>
+      <div>
+        <div style="font-size:14.5px;font-weight:600;margin-bottom:2px">RH enxuto</div>
+        <div style="font-size:11px;color:var(--orange-dark);font-weight:600;margin-bottom:7px">1–2 pessoas, múltiplas funções</div>
+        <p class="card-body" style="font-style:italic">Precisa de uma ferramenta que trabalhe por ele, não contra ele — sem curva de aprendizado de um mês.</p>
+      </div>
+    </div>
+    <div class="card persona-card">
+      <div class="persona-av">📊</div>
+      <div>
+        <div style="font-size:14.5px;font-weight:600;margin-bottom:2px">Gestor de equipe</div>
+        <div style="font-size:11px;color:var(--orange-dark);font-weight:600;margin-bottom:7px">Quer dados, não intuição</div>
+        <p class="card-body" style="font-style:italic">Precisa entender o time, conduzir feedbacks e acompanhar metas sem depender inteiramente do RH.</p>
+      </div>
+    </div>
+    <div class="card persona-card">
+      <div class="persona-av">🚀</div>
+      <div>
+        <div style="font-size:14.5px;font-weight:600;margin-bottom:2px">Empresa em crescimento</div>
+        <div style="font-size:11px;color:var(--orange-dark);font-weight:600;margin-bottom:7px">Formalizando cultura</div>
+        <p class="card-body" style="font-style:italic">Percebe que precisa estruturar processos de pessoas antes que o crescimento se torne um problema.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:0">
+    <div class="card-lbl">O perfil de PME-alvo em números</div>
+    <div class="g4" style="margin-bottom:0;margin-top:12px">
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--orange-dark);font-family:var(--font-display)">30–300</div><div style="font-size:11px;color:var(--text-muted);margin-top:3px">colaboradores</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--orange-dark);font-family:var(--font-display)">PJ</div><div style="font-size:11px;color:var(--text-muted);margin-top:3px">modelo predominante</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--orange-dark);font-family:var(--font-display)">1–2</div><div style="font-size:11px;color:var(--text-muted);margin-top:3px">pessoas no RH</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--orange-dark);font-family:var(--font-display)">CEO</div><div style="font-size:11px;color:var(--text-muted);margin-top:3px">decide a compra</div></div>
+    </div>
+  </div>
+</div>
+<!-- 05 SÓLIDES EM DETALHE -->
+<div class="section" id="concorrentes">
+  <div class="section-label"><span class="section-num">05</span>Sólides em detalhe — o que é e o que funciona</div>
+  <p class="section-lead">Seria desonesto dizer que a Sólides não tem valor algum. Ela é a maior HR Tech do Brasil, com mais de 40 mil clientes e 9 milhões de relatórios Profiler emitidos. Reconhecer o que funciona é parte de entender onde o Orion precisa ser melhor, não apenas diferente.</p>
+
+  <div class="comp" id="cc-profiler" onclick="toggleComp('cc-profiler')">
+    <div class="comp-head">
+      <div><div class="comp-name">Profiler — o assessment DISC</div><div class="comp-sub">O produto mais forte da Sólides</div></div>
+      <div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-low">Funciona bem</span><span class="chevron">⌄</span></div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">O que funciona</span>
+          <div class="comp-item"><span class="i-yes">✓</span>Credibilidade de mercado e validação acadêmica (USP/UFMG)</div>
+          <div class="comp-item"><span class="i-yes">✓</span>Resultado rápido — 7 minutos de teste</div>
+          <div class="comp-item"><span class="i-yes">✓</span>Base de 9M+ relatórios já emitidos</div>
+        </div>
+        <div class="comp-col"><span class="comp-col-lbl">A limitação real</span>
+          <div class="comp-item"><span class="i-no">✗</span>Apenas duas telas de perguntas — pouca profundidade</div>
+          <div class="comp-item"><span class="i-no">✗</span>Suscetível a distorções com uma única resposta</div>
+          <div class="comp-item"><span class="i-no">✗</span>Não é portável — fica preso ao banco da Sólides</div>
+        </div>
+      </div>
+      <div class="comp-learn"><span style="font-size:12px;color:var(--orange-dark);font-weight:600">→ Aprendizado para o Orion:</span> <span style="font-size:12.5px;color:var(--text-secondary)">credibilidade vem de profundidade e ciência, não de velocidade. O Big Five com 25 questões compensa isso.</span></div>
+    </div>
+  </div>
+
+  <div class="comp" id="cc-cargos" onclick="toggleComp('cc-cargos')">
+    <div class="comp-head">
+      <div><div class="comp-name">Engenharia de Cargos</div><div class="comp-sub">Vendida como diferencial premium</div></div>
+      <div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-high">Promete e não entrega</span><span class="chevron">⌄</span></div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">O que promete</span>
+          <div class="comp-item"><span class="i-opp">→</span>Cruzar perfil esperado do cargo com candidatos e colaboradores</div>
+          <div class="comp-item"><span class="i-opp">→</span>Orientar decisões de seleção com dados objetivos</div>
+        </div>
+        <div class="comp-col"><span class="comp-col-lbl">O que entrega na prática</span>
+          <div class="comp-item"><span class="i-no">✗</span>Apenas repositório de dados — sem cruzamento automático</div>
+          <div class="comp-item"><span class="i-no">✗</span>Victoria mantém Excel paralelo porque não gera análise útil</div>
+        </div>
+      </div>
+      <div class="comp-learn"><span style="font-size:12px;color:var(--orange-dark);font-weight:600">→ Aprendizado para o Orion:</span> <span style="font-size:12.5px;color:var(--text-secondary)">o score de aderência automático é exatamente a lacuna que a Sólides criou e nunca resolveu.</span></div>
+    </div>
+  </div>
+
+  <div class="comp" id="cc-ninebox" onclick="toggleComp('cc-ninebox')">
+    <div class="comp-head">
+      <div><div class="comp-name">Nine Box e PDI</div><div class="comp-sub">Tecnicamente corretos, operacionalmente inúteis</div></div>
+      <div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-high">Inacessível</span><span class="chevron">⌄</span></div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">Nine Box</span>
+          <div class="comp-item"><span class="i-no">✗</span>Leitura confusa, visual feio, sem orientação de ação</div>
+          <div class="comp-item"><span class="i-no">✗</span>Ninguém na Listra usa com confiança</div>
+        </div>
+        <div class="comp-col"><span class="comp-col-lbl">PDI</span>
+          <div class="comp-item"><span class="i-no">✗</span>Sem notificações, sem checagem de progresso</div>
+          <div class="comp-item"><span class="i-no">✗</span>PDIs criados nunca foram revisitados</div>
+        </div>
+      </div>
+      <div class="comp-learn"><span style="font-size:12px;color:var(--orange-dark);font-weight:600">→ Aprendizado para o Orion:</span> <span style="font-size:12.5px;color:var(--text-secondary)">Nine Box só entra quando houver dados de múltiplos ciclos. PDI precisa de rastreabilidade desde o dia 1.</span></div>
+    </div>
+  </div>
+
+  <div class="comp" id="cc-creditos" onclick="toggleComp('cc-creditos')">
+    <div class="comp-head">
+      <div><div class="comp-name">Modelo de créditos e módulos</div><div class="comp-sub">Estrutura de cobrança fragmentada e opaca</div></div>
+      <div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-data">Dado de mercado</span><span class="chevron">⌄</span></div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">Como funciona</span>
+          <div class="comp-item"><span class="i-no">✗</span>Crédito Profiler: R$ 79,90/unid — 2 créditos = 1 relatório (R$ 159,80)</div>
+          <div class="comp-item"><span class="i-no">✗</span>Pacote 10 créditos (mais vendido): R$ 759,05 ≈ R$ 151,81/relatório</div>
+        </div>
+        <div class="comp-col"><span class="comp-col-lbl">Por que isso é problema</span>
+          <div class="comp-item"><span class="i-no">✗</span>Empresa "economiza" uso de funcionalidade já paga</div>
+          <div class="comp-item"><span class="i-no">✗</span>Planos completos não têm preço público — só via vendas</div>
+        </div>
+      </div>
+      <div class="comp-learn"><span style="font-size:12px;color:var(--orange-dark);font-weight:600">→ Aprendizado para o Orion:</span> <span style="font-size:12.5px;color:var(--text-secondary)">mensalidade flat com assessment ilimitado é diferencial competitivo direto e comunicável.</span></div>
+    </div>
+  </div>
+
+  <div class="nota nota-info" style="margin-top:18px">
+    <div class="nota-title">O que também funciona — para ser justo</div>
+    <p>Banco Unificado de Candidatos (busca perfis já testados em outras empresas, sem consumir crédito), integração com LinkedIn quando estável, admissão digital bem estruturada para CLT, e suporte técnico que melhorou nos últimos meses. Nenhum desses pontos compensa as fraquezas estruturais, mas são reais.</p>
+  </div>
+</div>
+
+<!-- 06 SWOT -->
+<div class="section" id="swot">
+  <div class="section-label"><span class="section-num">06</span>Matriz SWOT — Sólides e Orion lado a lado</div>
+  <p class="section-lead">Duas leituras complementares: a posição da líder de mercado hoje, e a posição do desafiante que nasce explorando exatamente onde a líder falha.</p>
+
+  <div class="card-lbl" style="margin-bottom:10px">SWOT — Sólides</div>
+  <div class="swot">
+    <div class="swot-cell s">
+      <div class="swot-head">💪 Forças</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Maior HR Tech do Brasil — 40 mil clientes</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Profiler validado por USP e UFMG com 9M+ relatórios</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Plataforma verdadeiramente completa (RH + DP)</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Banco unificado de candidatos com perfis DISC</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Integrações com LinkedIn, Gupy, eSocial</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Brand awareness fortíssimo no mercado de PMEs</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-head">⚠️ Fraquezas</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Interface pesada e curva de aprendizado longa</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Relatórios ruins, sem customização</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Bugs recorrentes e perda de dados em avaliações</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Sistema de créditos que desincentiva uso</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Foco em CLT — ignora o mercado PJ crescente</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>PDI sem rastreabilidade real</div>
+    </div>
+    <div class="swot-cell o">
+      <div class="swot-head">🚀 Oportunidades</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Mercado de HR Tech cresce 9% ao ano no Brasil</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>96% das empresas abertas em 2025 são PMEs</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>IA pode corrigir as fraquezas históricas da plataforma</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Expansão para saúde ocupacional (NR-1)</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-head">⚡ Ameaças</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Novos entrantes mais focados e mais baratos</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Crescimento do mercado PJ que a plataforma ignora</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Clientes insatisfeitos migrando para alternativas</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Desconfiança crescente com o modelo de créditos</div>
+    </div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px;margin-top:28px">SWOT — Orion</div>
+  <div class="swot">
+    <div class="swot-cell s">
+      <div class="swot-head">💪 Forças</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Big Five — metodologia cientificamente superior ao DISC</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Aderência real cargo-colaborador (o que a Sólides prometeu)</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>PDI com rastreabilidade e acompanhamento genuíno</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Construído para PJ — nicho ignorado pela concorrência</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Preço justo — sem créditos, sem módulos não usados</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Integração com Flooxs — camada conversacional via WhatsApp</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-head">⚠️ Fraquezas</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Zero clientes externos — sem track record de mercado</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Big Five adaptado sem validação acadêmica formal</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Construído em Lovable — limitações técnicas de escala</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Time pequeno — suporte e produto acumulados nas mesmas pessoas</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Sem módulos de DP (ponto, folha, admissão CLT)</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Dependência de Victoria como especialista de domínio</div>
+    </div>
+    <div class="swot-cell o">
+      <div class="swot-head">🚀 Oportunidades</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Mercado PJ crescendo e sem alternativa específica</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Insatisfação real com a Sólides — clientes buscando saída</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>IA aplicada cria diferencial difícil de copiar rapidamente</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Piloto interno da Listra como case e validação real</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-head">⚡ Ameaças</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Sólides investe em IA para PMEs como próxima aposta</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Inércia do mercado — empresas relutam em migrar</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Credibilidade de novo entrante vs. líder estabelecido</div>
+      <div class="swot-item"><span class="swot-bullet">→</span>Escopo pode crescer e diluir o foco do produto</div>
+    </div>
+  </div>
+
+  <div class="status-banner">
+    <div class="status-dot"></div>
+    <div class="status-text">O Orion tem um nicho claro e uma metodologia superior. O maior risco não é a Sólides — é o Orion se tornar uma Sólides, com escopo que cresce sem critério. A disciplina de produto é o maior ativo neste momento.</div>
+    <span class="status-badge">Discovery validado</span>
+  </div>
+</div>
+
+<!-- 07 COMPARATIVO -->
+<div class="section" id="comparativo">
+  <div class="section-label"><span class="section-num">07</span>Comparativo direto — Sólides vs. Orion</div>
+  <p class="section-lead">16 dimensões avaliadas lado a lado, da metodologia ao modelo de cobrança.</p>
+
+  <table class="cmp">
+    <tr><th>Dimensão</th><th>Sólides</th><th>Orion</th></tr>
+    <tr><td class="dim">Assessment</td><td class="sol">Profiler DISC — 7 min, proprietário, 2 telas, crédito por uso</td><td class="ori">Big Five — 10 min, 25 questões contextualizadas, ilimitado</td></tr>
+    <tr><td class="dim">Metodologia</td><td class="sol">DISC — validado, mas suscetível a distorções</td><td class="ori">Big Five — modelo mais validado da psicologia moderna</td></tr>
+    <tr><td class="dim">Aderência cargo</td><td class="sol">Repositório sem cruzamento automático</td><td class="ori">Score automático, alerta de baixo fit, sugestão de PDI</td></tr>
+    <tr><td class="dim">Avaliação</td><td class="sol">Funciona com bugs, perda de dados, relatório ruim</td><td class="ori">Salvamento automático, PDF visual, sem perda de dados</td></tr>
+    <tr><td class="dim">PDI</td><td class="sol">Existe no papel — sem rastreabilidade real</td><td class="ori">Integrado à avaliação, com prazo e acompanhamento</td></tr>
+    <tr><td class="dim">Relatórios</td><td class="sol">Desatualizado, sem customização, PDF bloqueado pós-ciclo</td><td class="ori">Visual moderno, PDF sempre disponível</td></tr>
+    <tr><td class="dim">Recrutamento</td><td class="sol">ATS completo mas com bugs frequentes</td><td class="ori">Seleção por aderência, kanban, score composto</td></tr>
+    <tr><td class="dim">Mercado PJ</td><td class="sol">Não atende — linguagem CLT-centric</td><td class="ori">Desenhado para PJ — "ciclo de performance"</td></tr>
+    <tr><td class="dim">Cobrança</td><td class="sol">Módulos separados + créditos (~R$160/relatório)</td><td class="ori">Mensalidade flat — assessment ilimitado</td></tr>
+    <tr><td class="dim">Onboarding</td><td class="sol">Mais de 1 mês de implantação na Listra</td><td class="ori">Objetivo: funcionar sem treinamento na 1ª sessão</td></tr>
+    <tr><td class="dim">Agentes IA/WhatsApp</td><td class="sol">Não existe integração nativa</td><td class="ori">Flooxs integrado — 6 agentes mapeados (V2/V3)</td></tr>
+    <tr><td class="dim">Folha / Ponto</td><td class="sol">Módulos completos para CLT</td><td class="ori">Fora do escopo — foco deliberado</td></tr>
+    <tr><td class="dim">Credibilidade</td><td class="sol">40 mil clientes, 9M relatórios, líder de mercado</td><td class="ori">Zero clientes externos — piloto Listra em andamento</td></tr>
+  </table>
+</div>
+<!-- 08 PROPOSTA DE VALOR -->
+<div class="section" id="proposta">
+  <div class="section-label"><span class="section-num">08</span>Proposta de valor</div>
+
+  <div class="insight">
+    <div class="insight-lbl">Proposta central</div>
+    <p>O Orion conecta três dimensões que hoje ficam separadas nas empresas: como a pessoa se comporta, como ela performa e como ela se desenvolve. Tudo em um lugar só, com interface moderna, relatórios acionáveis e metodologia psicológica robusta por trás.</p>
+  </div>
+
+  <div class="g3">
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="card-icon">📉</div>
+      <div class="card-title">Avaliações genéricas e inúteis</div>
+      <p class="card-body">Ferramentas atuais geram relatórios confusos e difíceis de interpretar. O Orion entrega relatórios visuais, claros e acionáveis — pensados para quem conduz o feedback.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--yellow)">
+      <div class="card-icon">📁</div>
+      <div class="card-title">PDIs que morrem no Excel</div>
+      <p class="card-body">Planos de desenvolvimento fora de uma plataforma perdem rastreabilidade. O Orion integra o PDI ao ciclo de avaliação, com metas, prazos e acompanhamento real.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Contratações desalinhadas</div>
+      <p class="card-body">Sem dados comportamentais, empresas contratam por intuição. O Orion cruza o perfil do candidato com o perfil esperado do cargo, gerando um índice de aderência objetivo.</p>
+    </div>
+  </div>
+
+  <div class="chips">
+    <span class="chip orange">🧠 Assessment Big Five</span>
+    <span class="chip orange">📊 Ciclo de performance</span>
+    <span class="chip safe">📄 Relatórios em PDF</span>
+    <span class="chip safe">✅ PDI rastreável</span>
+    <span class="chip info">🎯 Seleção por aderência</span>
+    <span class="chip info">🔄 Kanban de candidatos</span>
+    <span class="chip purple">🤖 Agentes Flooxs (V2)</span>
+    <span class="chip">💼 Adaptado para PJ</span>
+    <span class="chip">💰 Preço justo, sem créditos</span>
+  </div>
+</div>
+
+<!-- 09 BIG FIVE -->
+<div class="section" id="bigfive">
+  <div class="section-label"><span class="section-num">09</span>Metodologia Big Five — base científica</div>
+  <p class="section-lead">A escolha da metodologia foi feita por Victoria, que tem formação em psicologia organizacional, após análise comparativa dos instrumentos disponíveis no mercado.</p>
+
+  <div class="g2">
+    <div class="card" style="background:var(--red-bg);border-color:#FCA5A5">
+      <div class="card-lbl" style="color:var(--red)">Por que não o DISC</div>
+      <p class="card-body" style="color:#7F1D1D">Apenas duas telas de perguntas — pouca credibilidade. Mais suscetível a distorções: uma resposta pode mudar o perfil gerado. Foca no comportamento no trabalho, mas não aprofunda a personalidade — limita a utilidade para desenvolvimento e PDI.</p>
+    </div>
+    <div class="card" style="background:var(--green-bg);border-color:#86EFAC">
+      <div class="card-lbl" style="color:var(--green)">O que é o Big Five</div>
+      <p class="card-body" style="color:#14532D">Um dos modelos de personalidade mais estudados e validados da história da psicologia. Desenvolvido a partir de abordagens empiristas, replicado em múltiplos idiomas e culturas — universalidade que confere aceitação científica ampla.</p>
+    </div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px">Os cinco fatores — OCEAN adaptado para o produto</div>
+  <div class="g5" style="margin-bottom:10px">
+    <div class="card" style="text-align:center;padding:16px 12px"><div style="font-size:11px;font-weight:700;color:var(--orange-dark);margin-bottom:5px">ABERTURA</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.5">Inovação e<br>Adaptabilidade</div></div>
+    <div class="card" style="text-align:center;padding:16px 12px"><div style="font-size:11px;font-weight:700;color:var(--orange-dark);margin-bottom:5px">CONSCIENCIOSIDADE</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.5">Organização<br>e Entrega</div></div>
+    <div class="card" style="text-align:center;padding:16px 12px"><div style="font-size:11px;font-weight:700;color:var(--orange-dark);margin-bottom:5px">EXTROVERSÃO</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.5">Interação e<br>Influência</div></div>
+    <div class="card" style="text-align:center;padding:16px 12px"><div style="font-size:11px;font-weight:700;color:var(--orange-dark);margin-bottom:5px">AMABILIDADE</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.5">Empatia e<br>Socialização</div></div>
+    <div class="card" style="text-align:center;padding:16px 12px"><div style="font-size:11px;font-weight:700;color:var(--orange-dark);margin-bottom:5px">NEUROTICISMO</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.5">Equilíbrio<br>Emocional</div></div>
+  </div>
+
+  <div class="nota nota-orange">
+    <div class="nota-title">Facetas — a profundidade do instrumento</div>
+    <p>Cada fator é composto por facetas que evitam leituras superficiais: Equilíbrio Emocional (Vulnerabilidade, Instabilidade, Passividade, Depressão), Extroversão (Comunicação, Altivez, Dinamismo, Interações Sociais), Socialização (Amabilidade, Pró-sociabilidade, Confiança), Realização (Competência, Prudência, Empenho), Abertura ao Novo (Abertura a Ideias, Liberalismo, Busca por Novidades).</p>
+  </div>
+
+  <div class="insight info">
+    <div class="insight-lbl">Adaptação para o produto — sem infringir direitos</div>
+    <p>As nomenclaturas dos fatores foram ajustadas para linguagem organizacional, e as perguntas contextualizadas para o ambiente de trabalho com situações profissionais reconhecíveis. A escala usa "Me identifico nada / Me identifico totalmente" — mais acessível que jargão clínico. O Big Five é metodologia científica aberta: adaptações de nomenclatura e perguntas são prática legítima na construção de instrumentos derivados.</p>
+  </div>
+</div>
+
+<!-- 10 INSTRUMENTO -->
+<div class="section" id="instrumento">
+  <div class="section-label"><span class="section-num">10</span>O instrumento — 25 questões já validadas</div>
+  <p class="section-lead">Victoria elaborou e revisou as 25 questões com suporte de IA, cobrindo todos os cinco fatores do Big Five e suas facetas. O instrumento está pronto para ser integrado ao produto.</p>
+
+  <div class="g4">
+    <div class="stat-card"><div class="stat-label">Total de questões</div><div class="stat-value">25</div><div class="stat-sub">5 por fator</div></div>
+    <div class="stat-card"><div class="stat-label">Escala</div><div class="stat-value">1–5</div><div class="stat-sub">"Não me identifico" a "Identifico totalmente"</div></div>
+    <div class="stat-card"><div class="stat-label">Questões reversas</div><div class="stat-value">Sim</div><div class="stat-sub">Tratadas no motor de cálculo</div></div>
+    <div class="stat-card"><div class="stat-label">Contexto</div><div class="stat-value">Trabalho</div><div class="stat-sub">Não clínico</div></div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px">Exemplos de questões por fator</div>
+  <table class="cmp">
+    <tr><th>Fator</th><th>Direta</th><th>Reversa</th></tr>
+    <tr><td class="dim">Abertura</td><td>"Quando enfrento um problema, considero diferentes formas de resolvê-lo."</td><td>"Mudanças importantes costumam me deixar desconfortável."</td></tr>
+    <tr><td class="dim">Conscienciosidade</td><td>"Planejo minhas atividades antes de começar."</td><td>"Desisto facilmente quando algo parece difícil."</td></tr>
+    <tr><td class="dim">Extroversão</td><td>"Me sinto energizado(a) ao interagir com pessoas."</td><td>"Me sinto desconfortável ao expressar opiniões em grupo."</td></tr>
+    <tr><td class="dim">Amabilidade</td><td>"Sempre ajo de forma ética mesmo quando ninguém está vendo."</td><td>"Sob pressão, posso ser mais impaciente com outras pessoas."</td></tr>
+    <tr><td class="dim">Neuroticismo</td><td>"Tenho boa perspectiva de mim mesmo perante desafios novos."</td><td>"Quando algo sai errado, imagino que outras coisas também darão errado."</td></tr>
+  </table>
+
+  <div class="nota nota-safe">
+    <div class="nota-title">Possível CRUD com versionamento — decisão de produto</div>
+    <p>Victoria pode editar as questões se quiser via painel admin — não é complexo de construir e evita depender do dev a cada ajuste de texto. Regra de negócio crítica: editar uma questão não altera resultados históricos. O sistema cria uma nova versão; assessments anteriores ficam vinculados à versão antiga.</p>
+  </div>
+</div>
+<!-- 11 COMPETÊNCIAS -->
+<div class="section" id="competencias">
+  <div class="section-label"><span class="section-num">11</span>Framework de competências</div>
+  <p class="section-lead">Base estrutural das avaliações de performance, elaborada por Victoria em duas versões: uma genérica para qualquer empresa cliente, outra alinhada aos valores da Listra para uso interno. Ao todo, 52 frases na versão comportamental, mais a avaliação de Hard Skills.</p>
+
+  <div class="g5">
+    <div class="card" style="padding:16px 14px"><div class="card-icon" style="font-size:18px">⚡</div><div style="font-size:13px;font-weight:600;margin-bottom:6px">Eficiência e Produtividade</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6">Gestão do tempo, foco em resultados, proatividade, tomada de decisão, capacidade autodidata</div></div>
+    <div class="card" style="padding:16px 14px"><div class="card-icon" style="font-size:18px">🤝</div><div style="font-size:13px;font-weight:600;margin-bottom:6px">Relacionamento e Colaboração</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6">Cooperação, relacionamento interpessoal, empatia, comunicação, respeito</div></div>
+    <div class="card" style="padding:16px 14px"><div class="card-icon" style="font-size:18px">🎯</div><div style="font-size:13px;font-weight:600;margin-bottom:6px">Estratégia</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6">Visão empreendedora, visão estratégica, influência, inspiração, negociação</div></div>
+    <div class="card" style="padding:16px 14px"><div class="card-icon" style="font-size:18px">🔄</div><div style="font-size:13px;font-weight:600;margin-bottom:6px">Adaptabilidade e Conformidade</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6">Flexibilidade, compliance, criatividade, comprometimento, agilidade</div></div>
+    <div class="card" style="padding:16px 14px"><div class="card-icon" style="font-size:18px">🌟</div><div style="font-size:13px;font-weight:600;margin-bottom:6px">Engajamento e Impacto</div><div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6">Tomada de decisão, influência, inspiração — foco em lideranças</div></div>
+  </div>
+
+  <div class="nota nota-info">
+    <div class="nota-title">Pesos calibrados por cargo e senioridade</div>
+    <p>Cada competência tem subcompetências e frases de avaliação específicas. Os pesos por grupo já estão calibrados por cargo e senioridade para as áreas de TI e Marketing — o ponto de partida que alimenta tanto a avaliação de performance quanto o perfil esperado usado no módulo de recrutamento.</p>
+  </div>
+</div>
+
+<!-- 12 IA E FLOOXS -->
+<div class="section" id="ia">
+  <div class="section-label"><span class="section-num">12</span>IA aplicada e integração com o Flooxs</div>
+  <p class="section-lead">O Orion separa duas camadas: cálculo determinístico (o que roda no MVP, sem custo de API e sem incerteza) e IA conversacional via Flooxs (o que entra na V2/V3, operando nos canais onde o trabalho de RH já acontece — o WhatsApp, principalmente).</p>
+
+  <div class="insight">
+    <div class="insight-lbl">A divisão que importa</div>
+    <p>O Orion é o sistema de registro — onde dados de performance, Big Five, PDIs e candidatos vivem. O Flooxs é a camada de execução conversacional — os agentes que leem e escrevem no Orion via API. A API do Orion precisa estar pronta para isso desde o MVP, mesmo que os agentes só entrem na V2.</p>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px">Algoritmos determinísticos — já no MVP, sem LLM</div>
+  <div class="g2">
+    <div class="card" style="border-left:3px solid var(--orange)"><div class="card-title" style="font-size:14.5px">Score de aderência</div><p class="card-body">100 − média dos deltas absolutos por fator Big Five (real vs. esperado do cargo). Sem chamada de IA — cálculo local, instantâneo.</p></div>
+    <div class="card" style="border-left:3px solid var(--orange)"><div class="card-title" style="font-size:14.5px">Score Big Five</div><p class="card-body">((média − 1) / 4) × 100 por fator, após tratamento de questões reversas pelo motor @bigfive-org/score.</p></div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px;margin-top:8px">6 agentes Flooxs mapeados — V2 e V3</div>
+  <table class="cmp">
+    <tr><th>#</th><th>Agente</th><th>Canal</th><th>Versão</th><th>Gatilho</th></tr>
+    <tr><td class="dim">1</td><td>Triagem de Candidatos</td><td>WhatsApp</td><td>V2</td><td>Candidato abordado ou inscrito na vaga</td></tr>
+    <tr><td class="dim">2</td><td>Feedback de Reprovados</td><td>WhatsApp</td><td>V2</td><td>Candidato movido para "Reprovado" no Kanban</td></tr>
+    <tr><td class="dim">3</td><td>Lembretes de Avaliação</td><td>WhatsApp</td><td>V2</td><td>Ciclo ativo com avaliação pendente a 3 dias</td></tr>
+    <tr><td class="dim">4</td><td>Acompanhamento de PDI</td><td>WhatsApp</td><td>V3</td><td>Ação de PDI com prazo em 3 dias ou menos</td></tr>
+    <tr><td class="dim">5</td><td>Onboarding Conversacional</td><td>WhatsApp</td><td>V3</td><td>Candidato marcado como aprovado</td></tr>
+    <tr><td class="dim">6</td><td>Nova — Assistente Interna</td><td>Web (Orion)</td><td>V3</td><td>Consulta manual pelo RH/Admin na interface</td></tr>
+  </table>
+
+  <div class="nota nota-caution">
+    <div class="nota-title">Preparação obrigatória no MVP — para não retrabalhar depois</div>
+    <p>API REST com autenticação por API Key própria por agente, sistema de webhooks para os eventos críticos (status de candidato, prazo de ciclo, prazo de PDI), e log de auditoria de toda chamada externa. Nada disso é construído agora — só a arquitetura precisa prever.</p>
+  </div>
+</div>
+
+<!-- 13 MVP -->
+<div class="section" id="mvp">
+  <div class="section-label"><span class="section-num">13</span>MVP — o que construir primeiro</div>
+  <p class="section-lead">Critério de inclusão simples: resolve uma dor concreta que hoje é resolvida fora da plataforma, em Excel, WhatsApp ou Google Drive. Duas frentes, dez dias úteis de build.</p>
+
+  <div class="sprint-grid">
+    <div class="sprint-card">
+      <div class="sprint-head sp-1"><div class="sprint-label">Sprint 1 — 5 dias</div><div class="sprint-title">Do zero ao perfil</div></div>
+      <div class="sprint-body">
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--orange)">·</span>Setup + autenticação com 3 perfis</div>
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--orange)">·</span>Cadastro de empresa, cargos com perfil Big Five</div>
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--orange)">·</span>Cadastro de colaboradores</div>
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--orange)">·</span>Assessment Big Five completo com radar chart</div>
+      </div>
+    </div>
+    <div class="sprint-card">
+      <div class="sprint-head sp-2"><div class="sprint-label">Sprint 2 — 5 dias</div><div class="sprint-title">Do ciclo ao relatório</div></div>
+      <div class="sprint-body">
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--text-muted)">·</span>Ciclo de avaliação + salvamento automático</div>
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--text-muted)">·</span>Encerramento + PDF com visual Orion</div>
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--text-muted)">·</span>PDI básico com ações e prazos</div>
+        <div class="sprint-item"><span class="sp-blt" style="color:var(--text-muted)">·</span>Recrutamento: kanban + link público + aderência</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--orange)">
+      <div class="card-lbl">Módulo 1 — Desenvolvimento</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Assessment Big Five — 25 questões + radar chart</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Ciclo de avaliação: auto + gestor</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Relatório individual exportável em PDF</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">PDI com ações, prazo e responsável</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Dashboard RH com métricas de ciclo</span></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--navy)">
+      <div class="card-lbl">Módulo 2 — Recrutamento</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Vaga vinculada a cargo com perfil Big Five esperado</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Link público para candidato externo responder o assessment</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Score de aderência calculado automaticamente</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Kanban: Em avaliação → Shortlist → Reprovado</span></div>
+        <div style="display:flex;gap:8px"><span style="color:var(--green);font-weight:700">✓</span><span class="card-body">Perfil do candidato com radar duplo + parecer</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nota nota-caution">
+    <div class="nota-title">Fora do MVP — decisões explícitas, não esquecimento</div>
+    <p>Cruzamento automático DISC × Big Five (metodologias incompatíveis — só campo de registro histórico), Nine Box (precisa de 2+ ciclos para ter contexto útil), avaliação de pares/360°, e o módulo financeiro completo (adiado para fase posterior — Marcelle já tem ferramenta própria parcialmente funcional).</p>
+  </div>
+</div>
+<!-- 14 REGRAS -->
+<div class="section" id="regras">
+  <div class="section-label"><span class="section-num">14</span>8 regras inegociáveis</div>
+  <p class="section-lead">Se uma dessas regras for implementada errada, o produto quebra. Tudo o mais está documentado nas especificações completas — essas oito precisam estar na cabeça de todo o time técnico.</p>
+
+  <div class="g2">
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">01</div><div><div class="opp-title">Soft delete em tudo</div><p class="opp-body">Nunca deletar fisicamente nenhuma entidade do sistema — colaborador, ciclo, avaliação, PDI.</p></div></div>
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">02</div><div><div class="opp-title">Máximo 1 ciclo ativo</div><p class="opp-body">Apenas um ciclo com status Ativo pode existir simultaneamente por empresa.</p></div></div>
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">03</div><div><div class="opp-title">Avaliação enviada é imutável</div><p class="opp-body">Somente RH/Admin pode reabrir uma avaliação já submetida.</p></div></div>
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">04</div><div><div class="opp-title">Isolamento de dados por perfil</div><p class="opp-body">Validação mandatória no backend — nunca confiar apenas no frontend.</p></div></div>
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">05</div><div><div class="opp-title">PDF disponível para sempre</div><p class="opp-body">Após encerrar o ciclo, o relatório em PDF nunca expira.</p></div></div>
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">06</div><div><div class="opp-title">OAuth não cria conta</div><p class="opp-body">Google/Microsoft só autenticam se o e-mail já tiver sido previamente convidado.</p></div></div>
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">07</div><div><div class="opp-title">Questão editada cria versão</div><p class="opp-body">Histórico de respostas do Big Five nunca é alterado retroativamente.</p></div></div>
+    <div class="opp-row"><div class="opp-icon" style="background:var(--orange-pale);color:var(--orange-dark);font-weight:700">08</div><div><div class="opp-title">Score = 100 − média dos deltas</div><p class="opp-body">Cálculo de aderência baseado nos 5 fatores Big Five do cargo vs. candidato/colaborador.</p></div></div>
+  </div>
+</div>
+
+<!-- 15 STACK -->
+<div class="section" id="stack">
+  <div class="section-label"><span class="section-num">15</span>Stack e arquitetura técnica</div>
+  <p class="section-lead">O MVP é construído no Lovable. Quatro decisões técnicas precisam de alinhamento do tech lead antes do início do build — levantadas no kickoff técnico de 10 de junho de 2026.</p>
+
+  <div class="g3">
+    <div class="card"><div class="card-icon">⚡</div><div class="card-title">Lovable</div><p class="card-body">Build do MVP — interface e lógica de aplicação, ambiente onde o time já tem experiência.</p></div>
+    <div class="card"><div class="card-icon">🗄️</div><div class="card-title">Supabase</div><p class="card-body">Banco de dados com Row Level Security nativo — base para o isolamento de dados por perfil.</p></div>
+    <div class="card"><div class="card-icon">🧮</div><div class="card-title">@bigfive-org/score</div><p class="card-body">Motor de cálculo Big Five — pacote npm, licença MIT, trata questões reversas automaticamente.</p></div>
+    <div class="card"><div class="card-icon">📄</div><div class="card-title">PDF server-side</div><p class="card-body">Geração com identidade visual Orion — ponto mais sensível tecnicamente do MVP.</p></div>
+    <div class="card"><div class="card-icon">🔐</div><div class="card-title">OAuth Google</div><p class="card-body">Autenticação nativa via Lovable/Supabase — nunca cria conta sozinho (regra 06).</p></div>
+    <div class="card"><div class="card-icon">🔌</div><div class="card-title">API REST + API Key</div><p class="card-body">Exposta desde o MVP — agentes Flooxs consomem a partir da V2 sem retrabalho de arquitetura.</p></div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px">4 decisões técnicas antes de começar</div>
+  <div class="risk-list">
+    <div class="risk-row"><span class="risk-sev rs-h">1</span><div><div class="risk-title">Geração de PDF com logo e cores</div><p class="risk-desc">Como implementar com fidelidade visual no Lovable? Ponto tecnicamente mais complexo da entrega.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-h">2</span><div><div class="risk-title">Row Level Security no Supabase</div><p class="risk-desc">Estratégia de isolamento de perfis por tenant — sustenta a regra 04.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-m">3</span><div><div class="risk-title">Versionamento de questões Big Five</div><p class="risk-desc">Sem quebrar histórico de respostas existentes — sustenta a regra 07.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-m">4</span><div><div class="risk-title">Estrutura de API Key para V2</div><p class="risk-desc">Arquitetar agora para integração Flooxs — implementar a integração de fato depois.</p></div></div>
+  </div>
+</div>
+
+<!-- 16 ROADMAP -->
+<div class="section" id="roadmap">
+  <div class="section-label"><span class="section-num">16</span>Roadmap — V1, V2 e V3</div>
+  <p class="section-lead">Três versões, cada uma adicionando inteligência e cobertura sobre a anterior. V1 entrega o núcleo. V2 aprofunda e conecta com o Flooxs. V3 torna o produto inteligente de fato.</p>
+
+  <div class="rm-track">
+    <div class="rm-col v1">
+      <div class="rm-col-head">V1 — MVP (agora)</div>
+      <div class="rm-item"><div class="rm-dot">🔐</div>Login com 3 perfis</div>
+      <div class="rm-item"><div class="rm-dot">🏢</div>Cargos e competências</div>
+      <div class="rm-item"><div class="rm-dot">🧠</div>Assessment Big Five (25 questões)</div>
+      <div class="rm-item"><div class="rm-dot">📊</div>Avaliação de performance</div>
+      <div class="rm-item"><div class="rm-dot">📋</div>PDI básico</div>
+      <div class="rm-item"><div class="rm-dot">📄</div>Relatórios em PDF</div>
+      <div class="rm-item"><div class="rm-dot">🎯</div>Seleção por aderência</div>
+    </div>
+    <div class="rm-col v2">
+      <div class="rm-col-head">V2 — Aprofundamento</div>
+      <div class="rm-item"><div class="rm-dot">👥</div>Avaliações 360° customizadas</div>
+      <div class="rm-item"><div class="rm-dot">⚖️</div>Pesos de avaliação por cargo</div>
+      <div class="rm-item"><div class="rm-dot">📈</div>Benchmark por cargo e senioridade</div>
+      <div class="rm-item"><div class="rm-dot">🔔</div>Lembretes automáticos (Flooxs)</div>
+      <div class="rm-item"><div class="rm-dot">🤖</div>Agentes 1, 2 e 3 do Flooxs</div>
+      <div class="rm-item"><div class="rm-dot">💰</div>Módulo financeiro básico</div>
+    </div>
+    <div class="rm-col v3">
+      <div class="rm-col-head">V3 — Inteligência</div>
+      <div class="rm-item"><div class="rm-dot">✨</div>IA para insights comportamentais</div>
+      <div class="rm-item"><div class="rm-dot">🎯</div>PDI automatizado por IA</div>
+      <div class="rm-item"><div class="rm-dot">🧭</div>Trilhas de desenvolvimento personalizadas</div>
+      <div class="rm-item"><div class="rm-dot">💬</div>Nova — assistente IA interna</div>
+      <div class="rm-item"><div class="rm-dot">📡</div>Análise preditiva de comportamento</div>
+      <div class="rm-item"><div class="rm-dot">🔗</div>Integração com ATS externos</div>
+    </div>
+  </div>
+</div>
+<!-- 17 PRECIFICAÇÃO -->
+<div class="section" id="precificacao">
+  <div class="section-label"><span class="section-num">17</span>Precificação</div>
+  <p class="section-lead">O paradoxo a resolver: acessível o suficiente para PMEs queimadas pela Sólides, premium o suficiente para comunicar qualidade. Mensalidade flat, sem créditos, sem módulos extras.</p>
+
+  <div class="price-grid">
+    <div class="price-card">
+      <div class="price-plan">Starter</div>
+      <div class="price-val">R$ 149</div>
+      <div class="price-sub">/mês · até 30 colab. · 2 vagas</div>
+      <div class="price-feat">Assessment ilimitado<br>1 ciclo/ano · PDI<br>Relatórios básicos</div>
+    </div>
+    <div class="price-card feat">
+      <div class="price-plan" style="color:var(--orange-dark)">Growth</div>
+      <div class="price-val">R$ 349</div>
+      <div class="price-sub">/mês · 31–80 colab. · 5 vagas</div>
+      <div class="price-feat">Tudo do Starter +<br>Ciclos ilimitados<br>Aderência de cargo<br>Recrutamento completo</div>
+    </div>
+    <div class="price-card">
+      <div class="price-plan">Scale</div>
+      <div class="price-val">R$ 699</div>
+      <div class="price-sub">/mês · 81–200 colab. · 10 vagas</div>
+      <div class="price-feat">Tudo do Growth +<br>Painel de gestor completo<br>Histórico salarial<br>Agentes Flooxs V2</div>
+    </div>
+    <div class="price-card">
+      <div class="price-plan">Enterprise</div>
+      <div class="price-val">Consulta</div>
+      <div class="price-sub">200+ colab. · ilimitado</div>
+      <div class="price-feat">Tudo do Scale +<br>SLA de suporte<br>Onboarding dedicado<br>Integração TOTVS/RM</div>
+    </div>
+  </div>
+
+  <div class="nota nota-safe">
+    <div class="nota-title">Por que o Starter já vence o plano Light da Sólides</div>
+    <p>A Sólides Light custa R$ 99/mês mas não inclui o Profiler — cobrado à parte. Para 5 relatórios no mês, o cliente paga R$ 99 + R$ 391,51 = R$ 490,51. O Orion a R$ 149 inclui assessments ilimitados. Para empresas que recrutam com frequência, o Orion já é mais barato no segundo mês.</p>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px;margin-top:18px">Add-ons opcionais</div>
+  <table class="cmp">
+    <tr><th>Add-on</th><th>O que inclui</th></tr>
+    <tr><td class="dim">Agentes Flooxs (V2)</td><td>R$ 149/mês — triagem, feedback e lembretes via WhatsApp</td></tr>
+    <tr><td class="dim">Módulo financeiro</td><td>R$ 99/mês — histórico salarial, contratos PJ, equipamentos</td></tr>
+    <tr><td class="dim">Onboarding dedicado</td><td>R$ 599 único — sessão de implantação com especialista Listra</td></tr>
+    <tr><td class="dim">Exportação de dados</td><td>Gratuito — dados do cliente sempre portáveis, sem lock-in</td></tr>
+  </table>
+</div>
+
+<!-- 18 RISCOS -->
+<div class="section" id="riscos">
+  <div class="section-label"><span class="section-num">18</span>Riscos e mitigações</div>
+  <div class="risk-list">
+    <div class="risk-row"><span class="risk-sev rs-h">Alto</span><div><div class="risk-title">Timing de desenvolvimento agressivo</div><p class="risk-desc">O compromisso original era MVP em junho — revisado para julho 2026. Um produto apressado com bugs críticos no piloto pode comprometer a credibilidade antes mesmo de sair da Listra. <strong>Mitigação:</strong> não comprimir a fase de validação com Victoria e Marcelle.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-h">Alto</span><div><div class="risk-title">Dependência de Victoria como especialista de domínio</div><p class="risk-desc">Ela detém o conhecimento de psicologia, as questões do Big Five e o framework de competências. <strong>Mitigação:</strong> documentação completa já consolidada nesta base de discovery — reduz risco de perda de know-how.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-h">Alto</span><div><div class="risk-title">A Sólides está se movendo</div><p class="risk-desc">Anúncio de investimento em IA para PMEs em maio de 2026. <strong>Mitigação:</strong> velocidade de execução do piloto interno e disciplina de escopo — não tentar competir em amplitude, competir em profundidade no nicho.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-m">Médio</span><div><div class="risk-title">Qualidade do Big Five adaptado</div><p class="risk-desc">As 25 questões não passaram por validação acadêmica formal como o NEO PI-R ou o BFP. <strong>Mitigação:</strong> aceitável para uso interno; validação formal antes de vender como produto de mercado.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-m">Médio</span><div><div class="risk-title">Dependência do Lovable</div><p class="risk-desc">Limitações técnicas podem surgir na escala — segurança, performance, customização avançada. <strong>Mitigação:</strong> arquitetura desenhada hoje já prevendo migração futura sem retrabalho total.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-m">Médio</span><div><div class="risk-title">Geração de PDF de qualidade</div><p class="risk-desc">Tecnicamente complexo no Lovable. <strong>Mitigação:</strong> atenção especial na fase de testes — é um dos 7 critérios de go-live do MVP.</p></div></div>
+    <div class="risk-row"><span class="risk-sev rs-l">Baixo</span><div><div class="risk-title">Resistência à mudança de clientes Sólides</div><p class="risk-desc"><strong>Mitigação:</strong> argumento de migração direto e quantificado — custo real, propriedade de dados, lacuna de aderência nunca resolvida.</p></div></div>
+  </div>
+</div>
+
+<!-- 19 MARCA -->
+<div class="section" id="marca">
+  <div class="section-label"><span class="section-num">19</span>Identidade e nome — Orion é temporário</div>
+  <p class="section-lead">O nome Orion foi escolhido durante o discovery como nome de trabalho. Carrega a ideia de navegação, orientação e algo maior que serve de referência — o que dialoga com a proposta do produto. A decisão final sobre o nome de mercado fica para um momento posterior.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-lbl">Por que laranja, não roxo</div>
+      <p class="card-body">O mercado de RH no Brasil é dominado por uma paleta roxa — Sólides, Culture Rocks, praticamente toda plataforma de gestão de pessoas converge para essa cor. Escolher o mesmo caminho seria se tornar "mais um". O laranja comunica energia, movimento e ação antes mesmo da pessoa ler uma palavra.</p>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Tom e personalidade</div>
+      <p class="card-body">Direto, inteligente e humano — não uma ferramenta corporativa pesada. Sem jargão de RH desnecessário, sem menus com nomes técnicos que assustam. O gestor sem formação em RH precisa entender o que está vendo na primeira vez que acessa.</p>
+    </div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px">Paleta oficial do produto</div>
+  <div class="g4" style="margin-bottom:18px">
+    <div style="text-align:center"><div style="width:100%;height:54px;border-radius:8px;background:#FF6A00;margin-bottom:6px"></div><div style="font-size:11px;font-weight:600">Laranja</div><div style="font-size:10px;color:var(--text-muted);font-family:monospace">#FF6A00</div></div>
+    <div style="text-align:center"><div style="width:100%;height:54px;border-radius:8px;background:#0F172A;margin-bottom:6px"></div><div style="font-size:11px;font-weight:600">Navy</div><div style="font-size:10px;color:var(--text-muted);font-family:monospace">#0F172A</div></div>
+    <div style="text-align:center"><div style="width:100%;height:54px;border-radius:8px;background:#0D9488;margin-bottom:6px"></div><div style="font-size:11px;font-weight:600">Teal</div><div style="font-size:10px;color:var(--text-muted);font-family:monospace">#0D9488</div></div>
+    <div style="text-align:center"><div style="width:100%;height:54px;border-radius:8px;background:#8B5CF6;margin-bottom:6px"></div><div style="font-size:11px;font-weight:600">Roxo</div><div style="font-size:10px;color:var(--text-muted);font-family:monospace">#8B5CF6</div></div>
+  </div>
+
+  <div class="nota nota-orange">
+    <div class="nota-title">Sugestões de nome alternativo — para avaliação futura</div>
+    <p>Caso o time decida não seguir com "Orion" no lançamento de mercado, algumas direções exploradas: <strong>Nortte</strong> (referência a orientação/bússola, sem o peso de constelação já usado por outras marcas), <strong>Aderis</strong> (de "aderência", remete diretamente ao score que é o diferencial técnico), <strong>Pessoa.IO</strong> (direto, descritivo, comunica tech), <strong>Vetor</strong> (direção e força, curto e fácil de pronunciar), <strong>Lumen</strong> (luz/clareza — em linha com "ver as pessoas com mais clareza"). Qualquer escolha final deve testar disponibilidade de domínio e marca registrada antes de avançar.</p>
+  </div>
+</div>
+<!-- 20 TIME -->
+<div class="section" id="time">
+  <div class="section-label"><span class="section-num">20</span>Time e papéis — quem faz o quê</div>
+  <div class="g2">
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--orange);color:#fff">LC</div><div><div class="name-fullname">Lívia Couto</div><div class="name-role" style="color:var(--orange-dark)">TI / Produto — PO</div></div></div>
+      <p class="card-body">Conduz o discovery, a documentação e o PRD. Apresenta o escopo para os devs, alinha o que é viável construir por sprint, e entrega o Prompt Pack para o Lovable. Acompanha as horas dedicadas ao projeto desde o início.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--orange-pale);color:var(--orange-dark)">VS</div><div><div class="name-fullname">Victoria Silva</div><div class="name-role" style="color:var(--orange-dark)">Gente &amp; Gestão — domínio</div></div></div>
+      <p class="card-body">Especialista de domínio e autora dos materiais de base: as 25 questões do Big Five, a planilha de competências com pesos por cargo, e a visão original de produto que originou o discovery.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--blue-bg);color:var(--blue)">MB</div><div><div class="name-fullname">Marcelle Borges</div><div class="name-role" style="color:var(--blue)">Financeiro / Admin</div></div></div>
+      <p class="card-body">Contribuiu com a perspectiva de contratos e financeiro durante o discovery. O módulo financeiro foi adiado, mas a integração futura entre pessoas e financeiro já está mapeada para a V2.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--navy);color:var(--orange)">MC</div><div><div class="name-fullname">Mariana Chebly (Mari)</div><div class="name-role" style="color:var(--text-muted)">Liderança Listra — patrocinadora</div></div></div>
+      <p class="card-body">Trouxe a inquietação original sobre a Sólides. Patrocina a iniciativa e é a aprovadora final do PRD e do go-live do MVP.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--off-white-dark);color:var(--text-secondary)">G/M/J</div><div><div class="name-fullname">Gêneses, Murilo e João</div><div class="name-role" style="color:var(--text-muted)">Desenvolvimento</div></div></div>
+      <p class="card-body">Responsáveis pela construção do MVP no Lovable, a partir do Prompt Pack e da especificação técnica entregues pela Lívia.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--off-white-dark);color:var(--text-secondary)">WV</div><div><div class="name-fullname">Welder Vieira</div><div class="name-role" style="color:var(--text-muted)">Liderança de Qualidade / QA</div></div></div>
+      <p class="card-body">Envolvido nas próximas etapas de validação técnica e qualidade antes do go-live do piloto interno.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 21 ESTEIRA -->
+<div class="section" id="esteira">
+  <div class="section-label"><span class="section-num">21</span>Esteira de execução — Orion Fast Track</div>
+  <p class="section-lead">Cinco fases entre o discovery e o piloto validado, com checkpoints claros e governança mínima — sem cerimônia desnecessária para um squad de três pessoas.</p>
+
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-date">Fase 0 · 2 dias</div><div class="tl-title">Alinhamento de entrada</div><div class="tl-body">Sessão com tech lead e dev apresentando o problema antes da solução. Output: acordo de MVP de uma página.</div></div>
+    <div class="tl-item"><div class="tl-date">Fase 1 · 3 dias</div><div class="tl-title">Handoff técnico estruturado</div><div class="tl-body">Pacote de 4 artefatos: mapa de módulos, modelo de dados, 8 regras críticas, critério de aceite do MVP.</div></div>
+    <div class="tl-item"><div class="tl-date">Fase 2 · 10 dias úteis</div><div class="tl-title">Build — Sprint 1 e Sprint 2</div><div class="tl-body">"Do zero ao perfil" e "Do ciclo ao relatório" — cada sprint com objetivo de usuário, não objetivo técnico.</div></div>
+    <div class="tl-item"><div class="tl-date">Fase 3 · 3 dias</div><div class="tl-title">Validação com Victoria e Marcelle</div><div class="tl-body">Casos de teste reais, observação sem ajuda. Bugs classificados por severidade. Decisão go/no-go.</div></div>
+    <div class="tl-item"><div class="tl-date">Fase 4 · 30 dias</div><div class="tl-title">Piloto interno na Listra</div><div class="tl-body">Uso real, dados reais, NPS informal. Retrospectiva final decide o que entra na V1.1 e se o Orion está pronto para sair da Listra.</div></div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px;margin-top:8px">Governança — três rituais, nada mais</div>
+  <div class="g3">
+    <div class="card"><div class="card-title" style="font-size:14px">Daily assíncrono</div><p class="card-body">Todo dia às 10h no canal "Orion | TI" do Google Chat. Três linhas: o que construí, o que bloqueou, o que faço amanhã.</p></div>
+    <div class="card"><div class="card-title" style="font-size:14px">Review de sprint</div><p class="card-body">Último dia de cada sprint, 45 minutos. O produto rodando na tela é a apresentação — sem slides.</p></div>
+    <div class="card"><div class="card-title" style="font-size:14px">Check semanal de produto</div><p class="card-body">Uma vez por semana, 30 minutos, com todo o time envolvido.</p></div>
+  </div>
+</div>
+
+<!-- 22 PRÓXIMOS PASSOS -->
+<div class="section" id="proximos">
+  <div class="section-label"><span class="section-num">22</span>Próximos passos — com data</div>
+  <p class="section-lead">Três ações imediatas, cada uma com responsável definido. As datas exatas foram marcadas como "a definir" no kickoff técnico — pendência ativa de fechamento.</p>
+
+  <div class="g3" style="margin-bottom:18px">
+    <div class="card" style="border-top:4px solid var(--orange)"><div class="card-lbl" style="color:var(--orange-dark)">PO — Lívia Couto</div><div class="card-title" style="font-size:14.5px">Entregar o Prompt Pack</div><p class="card-body">Prompts prontos para o Lovable, organizados por módulo e fluxo de usuário, para os devs executarem direto.</p></div>
+    <div class="card" style="border-top:4px solid var(--blue)"><div class="card-lbl" style="color:var(--blue)">Tech Lead / Dev</div><div class="card-title" style="font-size:14.5px">Validar 4 decisões técnicas</div><p class="card-body">Modelo de dados e os quatro pontos técnicos da seção 15 — nenhum dev começa sem isso resolvido.</p></div>
+    <div class="card" style="border-top:4px solid var(--green)"><div class="card-lbl" style="color:var(--green)">Dev</div><div class="card-title" style="font-size:14.5px">Começar o setup base</div><p class="card-body">Autenticação, estrutura de banco e os 3 perfis de acesso no Lovable.</p></div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-lbl">Critérios de sucesso do MVP — os 7 que definem o go-live</div>
+    <p>Victoria faz login, cria um cargo, convida um colaborador e lança o assessment sem ajuda técnica. Um colaborador responde o assessment e vê o radar com os 5 fatores calculados corretamente. Victoria cria um ciclo com autoavaliação e avaliação do gestor. Ela encerra o ciclo e o PDF gerado tem logo Orion e dados corretos. Um candidato externo responde o assessment via link público sem criar conta. O score de aderência aparece no kanban com classificação correta. Tentativas de acesso indevido entre perfis retornam erro 403.</p>
+  </div>
+
+  <div class="status-banner">
+    <div class="status-dot"></div>
+    <div class="status-text">Da planilha para o produto. Do workaround para o sistema. Do kickoff para o go-live — Julho 2026. Critério: Victoria usa o produto sem ajuda técnica.</div>
+    <span class="status-badge">Em build</span>
+  </div>
+</div>
+
+<div style="text-align:center;padding:52px 0;border-top:1px solid var(--border-light);margin-top:32px">
+  <div style="font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--text-primary);margin-bottom:7px">ORION — Discovery v1.0</div>
+  <div style="font-size:12.5px;color:var(--text-muted)">22 seções · Junho 2026 · Uso interno · Listra Digital</div>
+  <div style="font-size:13px;color:var(--orange-dark);font-weight:500;margin-top:6px;font-style:italic">Nome temporário — a constelação que ainda pode mudar de nome.</div>
+</div>
+
+</div>
+</main>
+
+<script>
+const sections=document.querySelectorAll('.section[id]');
+const navLinks=document.querySelectorAll('.nav-link');
+window.addEventListener('scroll',()=>{
+  let c='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-80)c=s.id});
+  navLinks.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+c)});
+},{passive:true});
+function toggleComp(id){document.getElementById(id).classList.toggle('open')}
+</script>
+</body>
+</html>
